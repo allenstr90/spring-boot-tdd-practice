@@ -25,4 +25,11 @@ public class SectionService {
         return sectionRepository.save(section);
     }
 
+    public void deleteSection(long id) {
+        if (sectionItemRepository.existsBySectionIdAndQuantityGreaterThan(id, 0))
+            throw new UnsupportedOperationException("The section has products.");
+        sectionItemRepository.deleteAllBySectionId(id);
+        sectionRepository.deleteById(id);
+    }
+
 }

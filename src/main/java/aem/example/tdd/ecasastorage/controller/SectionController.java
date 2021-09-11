@@ -3,13 +3,17 @@ package aem.example.tdd.ecasastorage.controller;
 import aem.example.tdd.ecasastorage.entity.Section;
 import aem.example.tdd.ecasastorage.entity.SectionItem;
 import aem.example.tdd.ecasastorage.service.SectionService;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.util.UriComponentsBuilder;
 
@@ -37,6 +41,12 @@ public class SectionController {
     @PutMapping
     public ResponseEntity<Section> updateSection(@RequestBody Section section) {
         return ResponseEntity.ok(sectionService.saveSection(section));
+    }
+
+    @DeleteMapping("/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void deleteSection(@PathVariable Long id) {
+        sectionService.deleteSection(id);
     }
 
 }

@@ -22,6 +22,8 @@ import aem.example.tdd.ecasastorage.service.ProductService;
 import aem.example.tdd.ecasastorage.service.SectionService;
 
 import static org.hamcrest.Matchers.greaterThan;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -108,6 +110,17 @@ public class SectionControllerTest {
                 .andExpect(status().isOk()).andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$.id").value(section.getId()))
                 .andExpect(jsonPath("$.productType").value(ProductType.CLEANLINESS.name()));
+    }
+
+    @Test
+    @DisplayName("Delete section")
+    public void deleteSection_shouldBeOk() throws Exception {
+        sectionService.saveSection(section);
+
+        long id = section.getId();
+
+        this.mockMvc.perform(delete("/section/{id}", id)).andExpect(status().isNoContent());
+        assertNull(sectionRepository.findById(id).orElse(null));
     }
 
 }

@@ -20,6 +20,8 @@ import static aem.example.tdd.ecasastorage.entity.ProductType.MEAT;
 import static aem.example.tdd.ecasastorage.entity.ReceiptType.NYLON;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @SpringBootTest
 public class SectionServiceTest {
@@ -72,4 +74,34 @@ public class SectionServiceTest {
         assertEquals(fromDB.getId(), aSection.getId());
         assertEquals(ProductType.CLEANLINESS, fromDB.getProductType());
     }
+
+    @Test
+    @DisplayName("Delete section should be ok if there are has no products")
+    @Transactional
+    void deleteSection_ShouldBeOk() {
+        sectionService.saveSection(aSection);
+        long id = aSection.getId();
+
+        sectionService.deleteSection(id);
+
+        Section deletedSection = sectionRepository.findById(id).orElse(null);
+
+        assertNull(deletedSection);
+    }
+
+    @Test
+    @DisplayName("No delete section if it has products")
+    public void deleteSection_ShouldFailIfHasProducts() {
+        // prepare
+        sectionRepository.save(aSection);
+        productRepository.save(aProduct);
+        SectionItem sectionItem = new SectionItem(aSection, aProduct, 1);
+        sectionService.addProductToSection(sectionItem);
+
+        long id = aSection.getId();
+        // delete
+        Exception exception = assertThrows(UnsupportedOperationException.class, () -> sectionService.deleteSection(id));
+        assertEquals("The section has products.", exception.getMessage());
+    }
+
 }
