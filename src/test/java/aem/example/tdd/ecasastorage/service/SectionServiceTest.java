@@ -38,6 +38,8 @@ public class SectionServiceTest {
 
     @BeforeEach
     void setUp() {
+        sectionItemRepository.deleteAll();
+        sectionRepository.deleteAll();
         sectionService = new SectionService(sectionItemRepository, sectionRepository);
         aSection = new Section(10, MEAT);
         aProduct = new Product(5, RED, 4.5, false, NYLON, "M-01");

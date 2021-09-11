@@ -17,9 +17,12 @@ public class SectionService {
         this.sectionRepository = sectionRepository;
     }
 
-
     public SectionItem addProductToSection(SectionItem item) {
         return sectionItemRepository.save(item);
+    }
+
+    public Section saveSection(Section section) {
+        return sectionRepository.save(section);
     }
 
 }
