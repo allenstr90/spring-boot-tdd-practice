@@ -1,6 +1,7 @@
 package aem.example.tdd.ecasastorage.service;
 
 import aem.example.tdd.ecasastorage.entity.Product;
+import aem.example.tdd.ecasastorage.entity.ProductType;
 import aem.example.tdd.ecasastorage.entity.Section;
 import aem.example.tdd.ecasastorage.entity.SectionItem;
 import aem.example.tdd.ecasastorage.repository.ProductRepository;
@@ -35,7 +36,6 @@ public class SectionServiceTest {
     private Section aSection;
     private Product aProduct;
 
-
     @BeforeEach
     void setUp() {
         sectionItemRepository.deleteAll();
@@ -59,4 +59,17 @@ public class SectionServiceTest {
         assertNotEquals(0, sectionItem.getId());
     }
 
+    @Test
+    @DisplayName("Edit a section")
+    @Transactional
+    public void editSection_ShouldBeOk() {
+        sectionService.saveSection(aSection);
+        aSection.setProductType(ProductType.CLEANLINESS);
+        sectionService.saveSection(aSection);
+
+        Section fromDB = sectionRepository.getById(aSection.getId());
+
+        assertEquals(fromDB.getId(), aSection.getId());
+        assertEquals(ProductType.CLEANLINESS, fromDB.getProductType());
+    }
 }

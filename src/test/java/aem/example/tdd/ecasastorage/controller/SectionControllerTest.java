@@ -23,6 +23,7 @@ import aem.example.tdd.ecasastorage.service.SectionService;
 
 import static org.hamcrest.Matchers.greaterThan;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -93,6 +94,20 @@ public class SectionControllerTest {
                 .andExpect(status().isCreated())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$.id").value(greaterThan(0))).andDo(print());
+    }
+
+    @Test
+    @DisplayName("Edit a section")
+    public void editSection_ShouldBeOk() throws Exception {
+        sectionService.saveSection(section);
+
+        section.setProductType(ProductType.CLEANLINESS);
+        String jsonData = mapper.writeValueAsString(section);
+
+        this.mockMvc.perform(put("/section").contentType(MediaType.APPLICATION_JSON).content(jsonData))
+                .andExpect(status().isOk()).andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$.id").value(section.getId()))
+                .andExpect(jsonPath("$.productType").value(ProductType.CLEANLINESS.name()));
     }
 
 }
