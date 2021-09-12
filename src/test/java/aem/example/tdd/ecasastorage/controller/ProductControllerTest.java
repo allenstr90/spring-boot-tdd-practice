@@ -2,8 +2,13 @@ package aem.example.tdd.ecasastorage.controller;
 
 import aem.example.tdd.ecasastorage.entity.Color;
 import aem.example.tdd.ecasastorage.entity.Product;
+import aem.example.tdd.ecasastorage.entity.ProductType;
 import aem.example.tdd.ecasastorage.entity.ReceiptType;
+import aem.example.tdd.ecasastorage.entity.Section;
+import aem.example.tdd.ecasastorage.entity.SectionItem;
 import aem.example.tdd.ecasastorage.repository.ProductRepository;
+import aem.example.tdd.ecasastorage.repository.SectionItemRepository;
+import aem.example.tdd.ecasastorage.repository.SectionRepository;
 import aem.example.tdd.ecasastorage.service.ProductService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -37,6 +42,12 @@ public class ProductControllerTest {
 
     @Autowired
     private ProductRepository productRepository;
+
+    @Autowired
+    private SectionRepository sectionRepository;
+
+    @Autowired
+    private SectionItemRepository itemRepository;
 
     private ProductService productService;
 
@@ -116,6 +127,43 @@ public class ProductControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$.length()").value(2));
+    }
+
+    @Test
+    @DisplayName("Filter products by Section")
+    public void filterProductBySection() throws Exception {
+        saveBatchProducts();
+        Section oneSection = sectionRepository.save(new Section(10, ProductType.CLOTHING));
+        Product oneProduct = productService.saveProduct(new Product(3, Color.RED, 10, true, ReceiptType.CRYSTAL, "1001-S1"));
+        SectionItem item = new SectionItem(oneSection, oneProduct, 10);
+        itemRepository.save(item);
+
+        URI uri = UriComponentsBuilder.fromPath("/product")
+                .query("section={sectionId}")
+                .buildAndExpand(oneSection.getId())
+                .toUri();
+
+        this.mockMvc.perform(get(uri))
+                .andExpect(status().isOk())
+                .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$.length()").value(1))
+                .andExpect(jsonPath("$.[0].id").value(oneProduct.getId()));
+
+    }
+
+    @Test
+    @DisplayName("Filter products ignore invalid filters")
+    public void filterProductIgnoreInvalidFilter() throws Exception {
+        saveBatchProducts();
+
+        URI uri = UriComponentsBuilder.fromPath("/product")
+                .query("invalidFilter={invalid}")
+                .buildAndExpand("doNothing")
+                .toUri();
+        this.mockMvc.perform(get(uri))
+                .andExpect(status().isOk())
+                .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$.length()").value(5));
     }
 
     private void saveBatchProducts() {

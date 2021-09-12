@@ -26,8 +26,6 @@ public class ProductService {
     }
 
     public List<Product> findAll(Map<String, String> queryParams) {
-        if (queryParams == null || queryParams.isEmpty())
-            return productRepository.findAll();
         return productRepository.findAll(SpecsProvider.filterProduct(queryParams));
     }
 }

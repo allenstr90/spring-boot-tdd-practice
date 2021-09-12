@@ -1,10 +1,16 @@
 package aem.example.tdd.ecasastorage.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
+
+import java.util.List;
 
 @Entity
 public class Product {
@@ -24,6 +30,10 @@ public class Product {
     private ReceiptType receiptType;
 
     private String lot;
+
+    @JsonIgnore
+    @OneToMany(fetch = FetchType.LAZY, orphanRemoval = true, mappedBy = "product")
+    private List<SectionItem> sections;
 
     public Product() {
     }
