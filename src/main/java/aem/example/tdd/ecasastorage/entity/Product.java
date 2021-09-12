@@ -28,10 +28,6 @@ public class Product {
     public Product() {
     }
 
-    public Product(long id) {
-        this.id = id;
-    }
-
     public Product(int size, Color color, double price, boolean isFragile, ReceiptType receiptType, String lot) {
         this.size = size;
         this.color = color;

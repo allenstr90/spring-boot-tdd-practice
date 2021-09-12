@@ -20,10 +20,6 @@ public class Section {
     public Section() {
     }
 
-    public Section(long id){
-        this.id = id;
-    }
-
     public Section(int size, ProductType productType) {
         this.size = size;
         this.productType = productType;
