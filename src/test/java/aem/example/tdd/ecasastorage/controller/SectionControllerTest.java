@@ -16,6 +16,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDocs;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
@@ -26,6 +27,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import static org.hamcrest.Matchers.greaterThan;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -39,6 +41,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
 @AutoConfigureMockMvc
 @WithMockUser(username = "admin", roles = {"USER", "ADMIN"})
+@AutoConfigureRestDocs
 public class SectionControllerTest {
 
     @Autowired
@@ -88,7 +91,8 @@ public class SectionControllerTest {
         this.mockMvc.perform(post("/section/product").contentType(MediaType.APPLICATION_JSON).content(jsonData)
                 .with(csrf()))
                 .andExpect(status().isCreated())
-                .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON));
+                .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
+                .andDo(document("section/add-product-to-section"));
     }
 
     @Test
@@ -101,7 +105,8 @@ public class SectionControllerTest {
                 .with(csrf()))
                 .andExpect(status().isCreated())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
-                .andExpect(jsonPath("$.id").value(greaterThan(0))).andDo(print());
+                .andExpect(jsonPath("$.id").value(greaterThan(0)))
+                .andDo(document("section/add-new-section"));
     }
 
     @Test
@@ -118,7 +123,8 @@ public class SectionControllerTest {
                 .with(csrf()))
                 .andExpect(status().isOk()).andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$.id").value(section.getId()))
-                .andExpect(jsonPath("$.productType").value(ProductType.CLEANLINESS.name()));
+                .andExpect(jsonPath("$.productType").value(ProductType.CLEANLINESS.name()))
+                .andDo(document("section/edit-section"));
     }
 
     @Test
@@ -130,7 +136,8 @@ public class SectionControllerTest {
 
         this.mockMvc.perform(delete("/section/{id}", id)
                 .with(csrf()))
-                .andExpect(status().isNoContent());
+                .andExpect(status().isNoContent())
+                .andDo(document("section/delete-section"));
         assertNull(sectionRepository.findById(id).orElse(null));
     }
 
@@ -144,7 +151,8 @@ public class SectionControllerTest {
 
         this.mockMvc.perform(delete("/section/{id}", id)
                 .with(csrf()))
-                .andExpect(status().isForbidden());
+                .andExpect(status().isForbidden())
+                .andDo(document("section/delete-section-only-admin"));
         assertNotNull(sectionRepository.findById(id).orElse(null));
     }
 

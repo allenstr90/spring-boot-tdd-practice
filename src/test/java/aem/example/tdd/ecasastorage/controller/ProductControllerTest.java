@@ -14,6 +14,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDocs;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
@@ -26,6 +27,7 @@ import java.net.URI;
 import java.util.Arrays;
 import java.util.List;
 
+import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -35,6 +37,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
 @AutoConfigureMockMvc
 @WithMockUser(username = "admin", roles = {"USER", "ADMIN"})
+@AutoConfigureRestDocs
 public class ProductControllerTest {
 
     @Autowired
@@ -75,7 +78,8 @@ public class ProductControllerTest {
                 .andExpect(jsonPath("$.[0].color").value(Color.BLUE.name()))
                 .andExpect(jsonPath("$.[0].price").value(3.2))
                 .andExpect(jsonPath("$.[0].receiptType").value(ReceiptType.CARDBOARD.name()))
-                .andExpect(jsonPath("$.[0].lot").value("001-C"));
+                .andExpect(jsonPath("$.[0].lot").value("001-C"))
+                .andDo(document("product/get-product-list"));
     }
 
     @Test
@@ -87,7 +91,8 @@ public class ProductControllerTest {
         this.mockMvc.perform(get(uri))
                 .andExpect(status().isOk())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
-                .andExpect(jsonPath("$.length()").value(2));
+                .andExpect(jsonPath("$.length()").value(2))
+                .andDo(document("product/filter-by-lot"));
     }
 
     @Test
@@ -99,7 +104,8 @@ public class ProductControllerTest {
         this.mockMvc.perform(get(uri))
                 .andExpect(status().isOk())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
-                .andExpect(jsonPath("$.length()").value(3));
+                .andExpect(jsonPath("$.length()").value(3))
+                .andDo(document("product/filter-by-color"));
     }
 
     @Test
@@ -111,7 +117,8 @@ public class ProductControllerTest {
         this.mockMvc.perform(get(uri))
                 .andExpect(status().isOk())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
-                .andExpect(jsonPath("$.length()").value(2));
+                .andExpect(jsonPath("$.length()").value(2))
+                .andDo(document("product/filter-by-fragility"));
     }
 
     @Test
@@ -126,7 +133,8 @@ public class ProductControllerTest {
         this.mockMvc.perform(get(uri))
                 .andExpect(status().isOk())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
-                .andExpect(jsonPath("$.length()").value(2));
+                .andExpect(jsonPath("$.length()").value(2))
+                .andDo(document("product/filter-combined"));
     }
 
     @Test
@@ -147,8 +155,8 @@ public class ProductControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$.length()").value(1))
-                .andExpect(jsonPath("$.[0].id").value(oneProduct.getId()));
-
+                .andExpect(jsonPath("$.[0].id").value(oneProduct.getId()))
+                .andDo(document("product/filter-by-section"));
     }
 
     @Test
@@ -163,7 +171,8 @@ public class ProductControllerTest {
         this.mockMvc.perform(get(uri))
                 .andExpect(status().isOk())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
-                .andExpect(jsonPath("$.length()").value(5));
+                .andExpect(jsonPath("$.length()").value(5))
+                .andDo(document("product/invalid-filters-ignored"));
     }
 
     private void saveBatchProducts() {

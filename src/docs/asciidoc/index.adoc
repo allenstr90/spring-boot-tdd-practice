@@ -1,0 +1,48 @@
+= API Documentation
+
+== Section API
+Collection of CRUD API endpoints used to manipulate section registered in the application.
+
+=== Add product to section
+Add a product to a section
+
+==== Request
+include::{snippets}/section/add-product-to-section/http-request.adoc[]
+==== Response
+include::{snippets}/section/add-product-to-section/http-response.adoc[]
+==== CURL
+include::{snippets}/section/add-product-to-section/curl-request.adoc[]
+
+=== Add new Section
+Add new Section
+
+==== Request
+include::{snippets}/section/add-new-section/http-request.adoc[]
+==== Response
+include::{snippets}/section/add-new-section/http-response.adoc[]
+==== CURL
+include::{snippets}/section/add-new-section/curl-request.adoc[]
+
+
+== Product API
+Collection of CRUD API endpoints used to manipulate products registered in the application.
+
+=== Get Product list
+Get product list
+
+==== Request
+include::{snippets}/product/get-product-list/http-request.adoc[]
+==== Response
+include::{snippets}/product/get-product-list/http-response.adoc[]
+==== CURL
+include::{snippets}/product/get-product-list/curl-request.adoc[]
+
+=== Filter by Section
+Filter products by section
+
+==== Request
+include::{snippets}/product/filter-by-section/http-request.adoc[]
+==== Response
+include::{snippets}/product/filter-by-section/http-response.adoc[]
+==== CURL
+include::{snippets}/product/filter-by-section/curl-request.adoc[]
