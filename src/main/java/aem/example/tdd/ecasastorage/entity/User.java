@@ -1,5 +1,7 @@
 package aem.example.tdd.ecasastorage.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -8,6 +10,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -30,13 +33,14 @@ public class User {
 	@Column(nullable = false)
 	private boolean isActive;
 
+	@JsonIgnore
 	@ManyToMany
 	@JoinTable(
 			name = "user_authority",
 			joinColumns = {@JoinColumn(name = "user_id", referencedColumnName = "id")},
 			inverseJoinColumns = {@JoinColumn(name = "authority_name", referencedColumnName = "name")}
 	)
-	private Set<Authority> authorities;
+	private Set<Authority> authorities = new HashSet<>();
 
 	public User() {
 	}
