@@ -24,7 +24,7 @@ public class EcasaStorageApplication {
 	}
 
 	// TODO Use liquibase or something to initial load
-	@Bean
+	//@Bean
 	public CommandLineRunner commandLineRunner(UserRepository userRepository, AuthorityRepository authorityRepository, PasswordEncoder passwordEncoder) {
 		return args -> {
 			authorityRepository.saveAll(Arrays.asList(new Authority("USER"), new Authority("ADMIN")));

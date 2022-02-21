@@ -6,6 +6,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
@@ -19,6 +20,14 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
     public SecurityConfiguration(TokenProvider tokenProvider) {
         this.tokenProvider = tokenProvider;
+    }
+
+    @Override
+    public void configure(WebSecurity web) {
+        web
+                .ignoring()
+                .antMatchers(HttpMethod.OPTIONS, "/**")
+                .antMatchers("/h2-console/**");
     }
 
     @Override
