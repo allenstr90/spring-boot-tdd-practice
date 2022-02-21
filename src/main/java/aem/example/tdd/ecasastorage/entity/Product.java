@@ -2,21 +2,15 @@ package aem.example.tdd.ecasastorage.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
-import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.OneToMany;
-
+import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
 public class Product {
     @Id
-    @GeneratedValue
-    private long id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
     private int size;
 
@@ -33,7 +27,7 @@ public class Product {
 
     @JsonIgnore
     @OneToMany(fetch = FetchType.LAZY, orphanRemoval = true, mappedBy = "product")
-    private List<SectionItem> sections;
+    private final List<SectionItem> sections = new ArrayList<>();
 
     public Product() {
     }
@@ -47,11 +41,11 @@ public class Product {
         this.lot = lot;
     }
 
-    public long getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
@@ -101,5 +95,15 @@ public class Product {
 
     public void setLot(String lot) {
         this.lot = lot;
+    }
+
+    public void addSectionItem(SectionItem sectionItem) {
+        this.sections.add(sectionItem);
+        sectionItem.setProduct(this);
+    }
+
+    public void removeSectionItem(SectionItem sectionItem) {
+        sections.remove(sectionItem);
+        sectionItem.setProduct(null);
     }
 }

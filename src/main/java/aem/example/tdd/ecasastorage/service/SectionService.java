@@ -2,11 +2,14 @@ package aem.example.tdd.ecasastorage.service;
 
 import aem.example.tdd.ecasastorage.entity.Section;
 import aem.example.tdd.ecasastorage.entity.SectionItem;
+import aem.example.tdd.ecasastorage.exception.SectionNotFoundException;
 import aem.example.tdd.ecasastorage.repository.SectionItemRepository;
 import aem.example.tdd.ecasastorage.repository.SectionRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
+@Transactional
 public class SectionService {
 
     private final SectionItemRepository sectionItemRepository;
@@ -22,7 +25,7 @@ public class SectionService {
     }
 
     public Section saveSection(Section section) {
-        return sectionRepository.save(section);
+        return sectionRepository.saveAndFlush(section);
     }
 
     public void deleteSection(long id) {
@@ -32,4 +35,8 @@ public class SectionService {
         sectionRepository.deleteById(id);
     }
 
+    public Section findSectionById(long id) {
+        return sectionRepository.findSectionById(id)
+                .orElseThrow(() -> new SectionNotFoundException("The section does not exist."));
+    }
 }

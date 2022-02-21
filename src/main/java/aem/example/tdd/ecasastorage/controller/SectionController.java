@@ -7,14 +7,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseStatus;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
 @RestController
@@ -33,7 +26,7 @@ public class SectionController {
     }
 
     @PostMapping
-    public ResponseEntity<Section> postMethodName(@RequestBody Section section, UriComponentsBuilder builder) {
+    public ResponseEntity<Section> createSection(@RequestBody Section section, UriComponentsBuilder builder) {
         sectionService.saveSection(section);
         return ResponseEntity.created(builder.path("/{id}").buildAndExpand(section.getId()).toUri()).body(section);
     }
@@ -49,5 +42,11 @@ public class SectionController {
     public void deleteSection(@PathVariable Long id) {
         sectionService.deleteSection(id);
     }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<Section> getSectionDetails(@PathVariable Long id) {
+        return ResponseEntity.ok(sectionService.findSectionById(id));
+    }
+
 
 }

@@ -7,7 +7,7 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface SectionItemRepository extends JpaRepository<SectionItem, Long> {
 
-    boolean existsBySectionIdAndQuantityGreaterThan(long sectionId, int quantity);
+    boolean existsBySectionIdAndQuantityGreaterThan(Long sectionId, int quantity);
 
     void deleteAllBySectionId(long id);
 }

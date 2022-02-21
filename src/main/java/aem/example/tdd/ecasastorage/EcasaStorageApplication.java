@@ -19,23 +19,8 @@ import java.util.HashSet;
 @EnableConfigurationProperties({EcasaProperties.class})
 public class EcasaStorageApplication {
 
-	public static void main(String[] args) {
-		SpringApplication.run(EcasaStorageApplication.class, args);
-	}
-
-	// TODO Use liquibase or something to initial load
-	//@Bean
-	public CommandLineRunner commandLineRunner(UserRepository userRepository, AuthorityRepository authorityRepository, PasswordEncoder passwordEncoder) {
-		return args -> {
-			authorityRepository.saveAll(Arrays.asList(new Authority("USER"), new Authority("ADMIN")));
-			User user = new User();
-			user.setActive(true);
-			user.setUsername("admin");
-			user.setPassword(passwordEncoder.encode("admin"));
-			user.setEmail("admin@mail.com");
-			user.setAuthorities(new HashSet<>(authorityRepository.findAll()));
-			userRepository.save(user);
-		};
-	}
+    public static void main(String[] args) {
+        SpringApplication.run(EcasaStorageApplication.class, args);
+    }
 
 }

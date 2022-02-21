@@ -4,11 +4,13 @@ import aem.example.tdd.ecasastorage.entity.Product;
 import aem.example.tdd.ecasastorage.repository.ProductRepository;
 import aem.example.tdd.ecasastorage.repository.SpecsProvider;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Map;
 
 @Service
+@Transactional
 public class ProductService {
 
     private final ProductRepository productRepository;
@@ -18,7 +20,7 @@ public class ProductService {
     }
 
     public Product saveProduct(Product product) {
-        return productRepository.save(product);
+        return productRepository.saveAndFlush(product);
     }
 
     public List<Product> saveAllProducts(List<Product> products) {

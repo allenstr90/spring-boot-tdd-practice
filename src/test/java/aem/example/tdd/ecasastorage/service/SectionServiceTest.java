@@ -4,6 +4,7 @@ import aem.example.tdd.ecasastorage.entity.Product;
 import aem.example.tdd.ecasastorage.entity.ProductType;
 import aem.example.tdd.ecasastorage.entity.Section;
 import aem.example.tdd.ecasastorage.entity.SectionItem;
+import aem.example.tdd.ecasastorage.exception.SectionNotFoundException;
 import aem.example.tdd.ecasastorage.repository.ProductRepository;
 import aem.example.tdd.ecasastorage.repository.SectionItemRepository;
 import aem.example.tdd.ecasastorage.repository.SectionRepository;
@@ -12,16 +13,13 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-
-import javax.transaction.Transactional;
+import org.springframework.test.annotation.DirtiesContext;
+import org.springframework.transaction.annotation.Transactional;
 
 import static aem.example.tdd.ecasastorage.entity.Color.RED;
 import static aem.example.tdd.ecasastorage.entity.ProductType.MEAT;
 import static aem.example.tdd.ecasastorage.entity.ReceiptType.NYLON;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotEquals;
-import static org.junit.jupiter.api.Assertions.assertNull;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 public class SectionServiceTest {
@@ -104,4 +102,25 @@ public class SectionServiceTest {
         assertEquals("The section has products.", exception.getMessage());
     }
 
+    @Test
+    @DisplayName("Get section details by id")
+    @Transactional
+    public void getSectionDetails_ById() {
+        // prepare
+        sectionService.saveSection(aSection);
+
+        long id = aSection.getId();
+
+        Section fromDB = sectionService.findSectionById(id);
+
+        assertEquals(fromDB.getId(), aSection.getId());
+        assertEquals(aSection.getProductType(), fromDB.getProductType());
+    }
+
+    @Test
+    @DisplayName("Return SectionNotFoundException if not exist")
+    public void getSectionInvalidId_ShouldReturnSectionNotFoundException() {
+        Exception exception = assertThrows(SectionNotFoundException.class, () -> sectionService.findSectionById(20l));
+        assertEquals("The section does not exist.", exception.getMessage());
+    }
 }
