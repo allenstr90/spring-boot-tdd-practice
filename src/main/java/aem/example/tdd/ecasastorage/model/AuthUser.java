@@ -1,7 +1,12 @@
 package aem.example.tdd.ecasastorage.model;
 
+import javax.validation.constraints.NotBlank;
+
 public class AuthUser {
+    @NotBlank
     private String username;
+
+    @NotBlank
     private String password;
 
     public String getUsername() {

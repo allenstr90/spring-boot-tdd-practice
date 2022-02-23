@@ -40,7 +40,7 @@ public class SectionServiceTest {
     void setUp() {
         sectionItemRepository.deleteAll();
         sectionRepository.deleteAll();
-        sectionService = new SectionService(sectionItemRepository, sectionRepository);
+        sectionService = new SectionService(sectionItemRepository, sectionRepository, productRepository);
         aSection = new Section(10, MEAT);
         aProduct = new Product(5, RED, 4.5, false, NYLON, "M-01");
     }
@@ -49,10 +49,15 @@ public class SectionServiceTest {
     @DisplayName("Add product to section")
     @Transactional
     void addProductToSection() {
-        sectionRepository.save(aSection);
         productRepository.save(aProduct);
-        SectionItem sectionItem = new SectionItem(aSection, aProduct, 100);
-        sectionService.addProductToSection(sectionItem);
+
+        SectionItem sectionItem = new SectionItem();
+        sectionItem.setProduct(aProduct);
+        sectionItem.setQuantity(100);
+        aSection.addSectionItem(sectionItem);
+
+        sectionRepository.save(aSection);
+        sectionItemRepository.save(sectionItem);
 
         assertEquals(1l, sectionItemRepository.count());
 
@@ -89,12 +94,13 @@ public class SectionServiceTest {
 
     @Test
     @DisplayName("No delete section if it has products")
+    @Transactional
     public void deleteSection_ShouldFailIfHasProducts() {
         // prepare
         sectionRepository.save(aSection);
         productRepository.save(aProduct);
-        SectionItem sectionItem = new SectionItem(aSection, aProduct, 1);
-        sectionService.addProductToSection(sectionItem);
+
+        sectionService.addProductToSection(aProduct.getId(), aSection.getId(), 1);
 
         long id = aSection.getId();
         // delete

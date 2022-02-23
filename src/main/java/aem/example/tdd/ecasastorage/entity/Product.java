@@ -3,6 +3,8 @@ package aem.example.tdd.ecasastorage.entity;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.*;
+import javax.validation.constraints.Positive;
+import javax.validation.constraints.PositiveOrZero;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -12,11 +14,13 @@ public class Product {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Positive(message = "The product size must be greater than zero")
     private int size;
 
     @Enumerated(EnumType.STRING)
     private Color color;
 
+    @PositiveOrZero
     private double price;
     private boolean isFragile;
 

@@ -20,9 +20,13 @@ public class SectionController {
         this.sectionService = sectionService;
     }
 
-    @PostMapping(value = "/product", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<SectionItem> addProductToSection(@RequestBody SectionItem sectionItem) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(sectionService.addProductToSection(sectionItem));
+    @PostMapping(value = "/{sectionId}/product/{productId}/{cant}", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<SectionItem> addProductToSection(@PathVariable Long sectionId,
+                                                           @PathVariable Long productId,
+                                                           @PathVariable int cant) {
+        return ResponseEntity
+                .status(HttpStatus.CREATED)
+                .body(sectionService.addProductToSection(productId, sectionId, cant));
     }
 
     @PostMapping

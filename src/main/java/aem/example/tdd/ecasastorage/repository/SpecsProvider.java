@@ -1,10 +1,6 @@
 package aem.example.tdd.ecasastorage.repository;
 
-import aem.example.tdd.ecasastorage.entity.Color;
-import aem.example.tdd.ecasastorage.entity.Product;
-import aem.example.tdd.ecasastorage.entity.Product_;
-import aem.example.tdd.ecasastorage.entity.SectionItem;
-import aem.example.tdd.ecasastorage.entity.SectionItem_;
+import aem.example.tdd.ecasastorage.entity.*;
 import org.springframework.data.jpa.domain.Specification;
 
 import javax.persistence.criteria.ListJoin;

@@ -58,7 +58,7 @@ public class SectionControllerTest {
 
     @BeforeEach
     void setUp() {
-        this.sectionService = new SectionService(itemRepository, sectionRepository);
+        this.sectionService = new SectionService(itemRepository, sectionRepository, productRepository);
         this.productService = new ProductService(productRepository);
 
         this.section = new Section(10, ProductType.APPLIANCES);
@@ -76,10 +76,10 @@ public class SectionControllerTest {
         sectionService.saveSection(section);
         productService.saveProduct(product);
 
-        SectionItem item = new SectionItem(section, product, 10);
+        int cant = 10;
 
-        String jsonData = mapper.writeValueAsString(item);
-        this.mockMvc.perform(post("/section/product").contentType(MediaType.APPLICATION_JSON).content(jsonData)
+        this.mockMvc.perform(post("/section/{sectionId}/product/{productId}/{cant}", section.getId(), product.getId(), cant)
+                        .contentType(MediaType.APPLICATION_JSON)
                         .with(csrf()))
                 .andExpect(status().isCreated())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
