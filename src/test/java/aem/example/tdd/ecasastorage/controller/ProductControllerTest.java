@@ -10,6 +10,7 @@ import aem.example.tdd.ecasastorage.repository.ProductRepository;
 import aem.example.tdd.ecasastorage.repository.SectionItemRepository;
 import aem.example.tdd.ecasastorage.repository.SectionRepository;
 import aem.example.tdd.ecasastorage.service.ProductService;
+import aem.example.tdd.ecasastorage.service.SectionService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -52,7 +53,11 @@ public class ProductControllerTest {
     @Autowired
     private SectionItemRepository itemRepository;
 
+    @Autowired
     private ProductService productService;
+
+    @Autowired
+    private SectionService sectionService;
 
     private Product product;
 
@@ -143,8 +148,7 @@ public class ProductControllerTest {
         saveBatchProducts();
         Section oneSection = sectionRepository.save(new Section(10, ProductType.CLOTHING));
         Product oneProduct = productService.saveProduct(new Product(3, Color.RED, 10, true, ReceiptType.CRYSTAL, "1001-S1"));
-        SectionItem item = new SectionItem(oneSection, oneProduct, 10);
-        itemRepository.save(item);
+        sectionService.addProductToSection(oneProduct.getId(), oneSection.getId(), 10);
 
         URI uri = UriComponentsBuilder.fromPath("/product")
                 .query("section={sectionId}")

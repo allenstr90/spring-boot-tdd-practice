@@ -3,6 +3,7 @@ package aem.example.tdd.ecasastorage.service;
 import aem.example.tdd.ecasastorage.entity.Product;
 import aem.example.tdd.ecasastorage.entity.Section;
 import aem.example.tdd.ecasastorage.entity.SectionItem;
+import aem.example.tdd.ecasastorage.entity.SectionProductKey;
 import aem.example.tdd.ecasastorage.exception.ProductNotFoundException;
 import aem.example.tdd.ecasastorage.exception.SectionNotFoundException;
 import aem.example.tdd.ecasastorage.repository.ProductRepository;
@@ -29,10 +30,8 @@ public class SectionService {
         Product product = productRepository.findProductById(productId).orElseThrow(ProductNotFoundException::new);
         Section section = sectionRepository.findSectionById(sectionId).orElseThrow(SectionNotFoundException::new);
 
-        SectionItem sectionItem = new SectionItem();
-        sectionItem.setQuantity(cant);
-        sectionItem.setProduct(product);
-        sectionItem.setSection(section);
+        SectionItem sectionItem = new SectionItem(section, product, cant);
+
         section.addSectionItem(sectionItem);
         product.addSectionItem(sectionItem);
 

@@ -6,15 +6,16 @@ import javax.persistence.*;
 @Table(name = "section_item")
 public class SectionItem {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    @EmbeddedId
+    private SectionProductKey id;
 
     @ManyToOne(fetch = FetchType.LAZY)
+    @MapsId("sectionId")
     @JoinColumn(name = "section_id", nullable = false)
     private Section section;
 
     @ManyToOne(fetch = FetchType.LAZY)
+    @MapsId("productId")
     @JoinColumn(name = "product_id", nullable = false)
     private Product product;
 
@@ -27,13 +28,16 @@ public class SectionItem {
         this.section = section;
         this.product = product;
         this.quantity = quantity;
+        this.id = new SectionProductKey();
+        this.id.setSectionId(section.getId());
+        this.id.setProductId(product.getId());
     }
 
-    public Long getId() {
+    public SectionProductKey getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(SectionProductKey id) {
         this.id = id;
     }
 

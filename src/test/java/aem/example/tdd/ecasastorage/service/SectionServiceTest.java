@@ -13,7 +13,6 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.transaction.annotation.Transactional;
 
 import static aem.example.tdd.ecasastorage.entity.Color.RED;
@@ -50,14 +49,10 @@ public class SectionServiceTest {
     @Transactional
     void addProductToSection() {
         productRepository.save(aProduct);
-
-        SectionItem sectionItem = new SectionItem();
-        sectionItem.setProduct(aProduct);
-        sectionItem.setQuantity(100);
-        aSection.addSectionItem(sectionItem);
-
         sectionRepository.save(aSection);
-        sectionItemRepository.save(sectionItem);
+
+        SectionItem sectionItem = sectionService.addProductToSection(aProduct.getId(), aSection.getId(), 100);
+
 
         assertEquals(1l, sectionItemRepository.count());
 
