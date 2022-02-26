@@ -6,7 +6,9 @@ import javax.persistence.*;
 import javax.validation.constraints.Positive;
 import javax.validation.constraints.PositiveOrZero;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Entity
 public class Product {
@@ -31,7 +33,7 @@ public class Product {
 
     @JsonIgnore
     @OneToMany(fetch = FetchType.LAZY, orphanRemoval = true, mappedBy = "product")
-    private final List<SectionItem> sections = new ArrayList<>();
+    private Set<SectionItem> sections = new HashSet<>();
 
     public Product() {
     }
@@ -101,13 +103,4 @@ public class Product {
         this.lot = lot;
     }
 
-    public void addSectionItem(SectionItem sectionItem) {
-        this.sections.add(sectionItem);
-        sectionItem.setProduct(this);
-    }
-
-    public void removeSectionItem(SectionItem sectionItem) {
-        sections.remove(sectionItem);
-        sectionItem.setProduct(null);
-    }
 }

@@ -33,7 +33,6 @@ public class SectionService {
         SectionItem sectionItem = new SectionItem(section, product, cant);
 
         section.addSectionItem(sectionItem);
-        product.addSectionItem(sectionItem);
 
         sectionItemRepository.saveAndFlush(sectionItem);
         return sectionItem;

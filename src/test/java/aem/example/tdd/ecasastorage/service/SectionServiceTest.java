@@ -15,6 +15,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Optional;
+
 import static aem.example.tdd.ecasastorage.entity.Color.RED;
 import static aem.example.tdd.ecasastorage.entity.ProductType.MEAT;
 import static aem.example.tdd.ecasastorage.entity.ReceiptType.NYLON;
@@ -54,9 +56,14 @@ public class SectionServiceTest {
         SectionItem sectionItem = sectionService.addProductToSection(aProduct.getId(), aSection.getId(), 100);
 
 
-        assertEquals(1l, sectionItemRepository.count());
+        assertEquals(1L, sectionItemRepository.count());
+        Optional<Section> updatedSection = sectionRepository.findSectionById(sectionItem.getSection().getId());
+        assertTrue(updatedSection.isPresent());
+        Section section = updatedSection.get();
 
-        assertNotEquals(0, sectionItem.getId());
+        assertEquals(aSection.getId(), section.getId());
+        assertEquals(1, section.getProducts().size());
+        assertEquals(aProduct.getId(), section.getProducts().iterator().next().getProduct().getId());
     }
 
     @Test

@@ -151,7 +151,7 @@ public class ProductControllerTest {
         sectionService.addProductToSection(oneProduct.getId(), oneSection.getId(), 10);
 
         URI uri = UriComponentsBuilder.fromPath("/product")
-                .query("section={sectionId}")
+                .query("sections={sectionId}")
                 .buildAndExpand(oneSection.getId())
                 .toUri();
 

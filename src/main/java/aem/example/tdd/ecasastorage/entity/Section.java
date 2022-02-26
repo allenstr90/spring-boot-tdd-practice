@@ -4,7 +4,9 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.*;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Entity
 public class Section {
@@ -17,9 +19,8 @@ public class Section {
     @Enumerated(EnumType.STRING)
     private ProductType productType;
 
-    @JsonIgnore
     @OneToMany(fetch = FetchType.LAZY, orphanRemoval = true, mappedBy = "section")
-    private final List<SectionItem> products = new ArrayList<>();
+    private Set<SectionItem> products = new HashSet<>();
 
     public Section() {
     }
@@ -61,5 +62,13 @@ public class Section {
     public void removeSectionItem(SectionItem sectionItem) {
         products.remove(sectionItem);
         sectionItem.setSection(null);
+    }
+
+    public Set<SectionItem> getProducts() {
+        return products;
+    }
+
+    public void setProducts(Set<SectionItem> products) {
+        this.products = products;
     }
 }

@@ -3,8 +3,8 @@ package aem.example.tdd.ecasastorage.repository;
 import aem.example.tdd.ecasastorage.entity.*;
 import org.springframework.data.jpa.domain.Specification;
 
-import javax.persistence.criteria.ListJoin;
 import javax.persistence.criteria.Predicate;
+import javax.persistence.criteria.SetJoin;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -30,8 +30,8 @@ public class SpecsProvider {
                     case Product_.COLOR:
                         predicates.add(criteriaBuilder.equal(root.get(Product_.color), Color.valueOf(param)));
                         break;
-                    case "section":
-                        ListJoin<Product, SectionItem> joinSectionItem = root.join(Product_.sections);
+                    case Product_.SECTIONS:
+                        SetJoin<Product, SectionItem> joinSectionItem = root.join(Product_.sections);
                         predicates.add(criteriaBuilder.equal(joinSectionItem.get(SectionItem_.section), Long.parseLong(param)));
                         break;
                     default:
